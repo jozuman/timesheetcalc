@@ -49,7 +49,7 @@
         <h1>Times</h1>
         <p class="lead">Paste.<br> Go.</p>
         <form method="post" action="index.php" class="form">
-            <textarea class="form-control" rows="3" name="data"></textarea>
+            <input type="text" class="form-control" placeholder="hh:mm - hhPM, hh:mm - hh:mm" name="data">
             <br>
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
