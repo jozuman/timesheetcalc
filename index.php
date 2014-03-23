@@ -56,6 +56,39 @@
       </div>
       
       <?php
+      
+        function calculateTimeFormat($timeString){
+            if(strpos($timeString,':') !== false){
+                $format = "h:ia";
+            }else{
+                $format = "ha";
+            }
+            return $format;
+        }
+        
+        function calcMeridian($timeString){
+            if(strpos($timeString,"m") !== false){
+                //we have am or pm already specified so we're done
+            }else{
+                if(strpos($timeString,':') !== false){
+                    $temp = explode(":",$timeString);
+                    $hour = $temp[0];
+                    if($hour > 5 && $hour < 12){
+                        $timeString = $timeString . "am";
+                    }else{
+                        $timeString = $timeString . "pm";
+                    }
+                }else{
+                    if($timeString > 5 && $timeString < 12){
+                        $timeString = $timeString . "am";
+                    }else{
+                        $timeString = $timeString . "pm";
+                    }
+                }
+            }
+            return $timeString;
+        }
+      
         $input = $_POST["data"];
         if(!empty($input)){
             $timesarray = explode(",", $input);
@@ -64,18 +97,17 @@
                 $startEnd = explode("-", $time);
                 $start = trim($startEnd[0]);
                 $end = trim($startEnd[1]);
-                if(strpos($start,':') !== false){
-                    $startDateTime = DateTime::createFromFormat("h:i", $start);
-                }else{
-                    $startDateTime = DateTime::createFromFormat("h", $start);
-                }
                 
-                if(strpos($end,':') !== false){
-                    $endDateTime = DateTime::createFromFormat("h:i", $end);
-                }else{
-                    $endDateTime = DateTime::createFromFormat("h", $end);
-                }
-                $interval = $startDateTime->diff($endDateTime);
+                $start = calcMeridian($start);
+                $end = calcMeridian($end);
+                
+                $startDateTime = DateTime::createFromFormat(calculateTimeFormat($start), $start);
+
+                $endDateTime = DateTime::createFromFormat(calculateTimeFormat($end), $end);
+
+                var_dump($startDateTime);
+                var_dump($endDateTime);
+                $interval = date_diff($startDateTime, $endDateTime);
                 $actualTime = $interval->h + $interval->i/60;
                 $actualTimes[] = $actualTime;
             }
