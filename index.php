@@ -56,26 +56,41 @@
       </div>
       
       <?php
-        $data = $_POST["data"];
-        if(!empty($data)){
-            echo $data;
-            $times = expode(",", $data);
-            echo "test2";
-            var_dump($times);
-            foreach ($times as $time){
+        $input = $_POST["data"];
+        if(!empty($input)){
+            $timesarray = explode(",", $input);
+            $actualTimes = array();
+            foreach ($timesarray as $time){
                 $startEnd = explode("-", $time);
                 $start = trim($startEnd[0]);
                 $end = trim($startEnd[1]);
-                echo($start);
-                echo($end);
-                $startDateTime = new DateTime($start);
-                $endDateTime = new DateTime($end);
+                if(strpos($start,':') !== false){
+                    $startDateTime = DateTime::createFromFormat("h:i", $start);
+                }else{
+                    $startDateTime = DateTime::createFromFormat("h", $start);
+                }
+                
+                if(strpos($end,':') !== false){
+                    $endDateTime = DateTime::createFromFormat("h:i", $end);
+                }else{
+                    $endDateTime = DateTime::createFromFormat("h", $end);
+                }
                 $interval = $startDateTime->diff($endDateTime);
-                var_dump($interval);
-                // echo $interval->format('%R%a days');
+                $actualTime = $interval->h + $interval->i/60;
+                $actualTimes[] = $actualTime;
+            }
+            $totalTime = 0;
+            foreach ($actualTimes as $actualTime){
+                $totalTime += $actualTime;
             }
             ?>
             <div class="well">
+                <?php 
+                echo $input;
+                ?><b><?php
+                echo " = ";
+                echo $totalTime; 
+                ?></b>
             </div>
             <?php
         }
