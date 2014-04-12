@@ -31,13 +31,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Timesheet Calc</a>
+          <a class="navbar-brand" href="index.php">Timesheet Calc</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li class="active"><a href="index.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -47,11 +46,15 @@
 
       <div class="starter-template">
         <h1>Times</h1>
-        <p class="lead">Paste.<br> Go.</p>
+        <p class="lead">Paste the time spent on something<br>Go. will sum it.</p>
         <form method="post" action="index.php" class="form">
             <input type="text" class="form-control" placeholder="hh:mm - hhPM, hh:mm - hh:mm" name="data">
             <br>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default">Go.</button>
+            <br>
+            <div class="pull-right text-muted">
+                <input type="checkbox" name="debug" value="true"> <small>debugging</small></input>
+            </div>
         </form>
       </div>
       
@@ -105,8 +108,10 @@
 
                 $endDateTime = DateTime::createFromFormat(calculateTimeFormat($end), $end);
 
-                var_dump($startDateTime);
-                var_dump($endDateTime);
+                if($_POST["debug"]){
+                    var_dump($startDateTime);
+                    var_dump($endDateTime);
+                }
                 $interval = date_diff($startDateTime, $endDateTime);
                 $actualTime = $interval->h + $interval->i/60;
                 $actualTimes[] = $actualTime;
