@@ -108,10 +108,15 @@
 
                 $endDateTime = DateTime::createFromFormat(calculateTimeFormat($end), $end);
 
+                if($startDateTime > $endDateTime){
+                    date_add($endDateTime, date_interval_create_from_date_string('1 day'));
+                }
+
                 if($_POST["debug"]){
                     var_dump($startDateTime);
                     var_dump($endDateTime);
                 }
+
                 $interval = date_diff($startDateTime, $endDateTime);
                 $actualTime = $interval->h + $interval->i/60;
                 $actualTimes[] = $actualTime;
